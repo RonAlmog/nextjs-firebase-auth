@@ -12,7 +12,8 @@
     "firebase": "^9.19.1",
     "next": "12.2.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-firebase-hooks": "^5.1.1"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.3.0",
