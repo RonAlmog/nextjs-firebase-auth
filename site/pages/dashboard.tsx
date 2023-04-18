@@ -6,6 +6,7 @@ import Link from "next/link";
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
+import cert from "../firebase/cert";
 
 const Dashboard: NextPage = () => {
   const [itemData, setItemData] = useState<ItemProps[]>([]);
@@ -32,6 +33,25 @@ const Dashboard: NextPage = () => {
     itemElements.push(item);
   }
 
+  const callApi = async () => {
+    const token = await user?.getIdToken();
+    console.log(token);
+    const echoEndpoint: string = "https://jwtecho.pixegami.io";
+    const certStr: string = cert;
+    console.log("cert", cert);
+    const encodedCertStr = encodeURIComponent(certStr);
+    const audience: string = "origami-store-a8de3";
+    const verficatonEndpoint: string = `${echoEndpoint}/verify?audience=${audience}&cert_str=${encodedCertStr}`;
+    const requestInfo = {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    };
+    const response = await fetch(verficatonEndpoint, requestInfo);
+    const responseBody = await response.json();
+    console.log("body", responseBody);
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -53,7 +73,10 @@ const Dashboard: NextPage = () => {
         {itemElements}
       </div>
       <div className="mt-8 w-full flex">
-        <button className="text-center bg-blue-600 text-white rounded-md p-2 w-48">
+        <button
+          onClick={callApi}
+          className="text-center bg-blue-600 text-white rounded-md p-2 w-48"
+        >
           Add Item
         </button>
       </div>
